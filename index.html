@@ -1,24 +1,193 @@
-DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Omnitrix IoT Dashboard</title>
+    <!-- Fuente futurista y limpia desde Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle, #101510 0%, #050805 100%);
+            color: #ffffff;
+            font-family: 'Rajdhani', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        /* Contenedor principal estilo interfaz del Omnitrix */
+        .omnitrix-panel {
+            background: rgba(20, 25, 20, 0.85);
+            border: 3px solid #00ff00;
+            border-radius: 25px;
+            padding: 40px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 0 25px rgba(0, 255, 0, 0.2), inset 0 0 15px rgba(0, 255, 0, 0.1);
+            text-align: center;
+            position: relative;
+        }
+
+        /* Detalle decorativo del Omnitrix */
+        .omnitrix-panel::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 6px;
+            background: #00ff00;
+            box-shadow: 0 0 10px #00ff00;
+            border-radius: 0 0 10px 10px;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #00ff00;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 0 12px rgba(0, 255, 0, 0.6);
+            margin-bottom: 5px;
+        }
+
+        .system-status {
+            font-size: 0.9rem;
+            color: #8a9a8a;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* Indicador parpadeante de "Sistema Activo" */
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #00ff00;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #00ff00;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.9); opacity: 0.4; }
+            50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 14px #00ff00; }
+            100% { transform: scale(0.9); opacity: 0.4; }
+        }
+
+        .stats-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+        /* Tarjetas de los sensores */
+        .sensor-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 255, 0, 0.2);
+            border-radius: 12px;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .sensor-card:hover {
+            border-color: #00ff00;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.15);
+            background: rgba(0, 255, 0, 0.02);
+        }
+
+        .sensor-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: left;
+        }
+
+        .sensor-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #00ff00;
+            text-shadow: 0 0 8px rgba(0, 255, 0, 0.4);
+        }
+
+        /* Pie de página con hora de actualización */
+        .footer-info {
+            font-size: 0.85rem;
+            color: #708070;
+            border-top: 1px solid rgba(0, 255, 0, 0.1);
+            padding-top: 20px;
+        }
+
+        #fecha {
+            color: #a0b0a0;
+            font-weight: 600;
+        }
+    </style>
 </head>
 <body>
-    <h1>Dashboard IoT con python y github pages</h1>
 
-    <h2>Temperatura: <span id="temperatura">--</span> °C </h2>
-    <h2>Humedad: <span id="humedad">--</span> %</h2>
-    <p>Última actualizacion: <span id="fecha">--</span></p>
+    <div class="omnitrix-panel">
+        <h1>Omnitrix Link</h1>
+        <div class="system-status">
+            <span class="pulse-dot"></span>
+            <span>Monitoreo de Bio-Señales</span>
+        </div>
+
+        <div class="stats-container">
+            <!-- Tarjeta Temperatura -->
+            <div class="sensor-card">
+                <div class="sensor-label">Temperatura</div>
+                <div class="sensor-value"><span id="temperatura">--</span>°C</div>
+            </div>
+
+            <!-- Tarjeta Humedad -->
+            <div class="sensor-card">
+                <div class="sensor-label">Humedad</div>
+                <div class="sensor-value"><span id="humedad">--</span>%</div>
+            </div>
+        </div>
+
+        <div class="footer-info">
+            Último escaneo: <span id="fecha">--</span>
+        </div>
+    </div>
+
     <script>
-    fetch("datos.json")
-        .then(respuesta => respuesta.json())
-        .then(datos => {
-            document.getElementById("temperatura").textContent = datos.temperatura;
-            document.getElementById("humedad").textContent = datos.humedad;
-            document.getElementById("fecha").textContent = datos.fecha_hora;
-        });
+        // Tu lógica fetch original intacta y funcional
+        fetch("datos.json")
+            .then(respuesta => respuesta.json())
+            .then(datos => {
+                document.getElementById("temperatura").textContent = datos.temperatura;
+                document.getElementById("humedad").textContent = datos.humedad;
+                document.getElementById("fecha").textContent = datos.fecha_hora;
+            })
+            .catch(error => {
+                console.error("Error en la descarga de datos de la base:", error);
+                document.getElementById("fecha").textContent = "ERROR DE CONEXIÓN";
+            });
     </script>
 </body>
 </html>
